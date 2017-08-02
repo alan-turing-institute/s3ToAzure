@@ -27,8 +27,8 @@ for file in $files; do
     echo $current_date_time;
 done
 
-echo "Files in the mogrepsuk Azure container"
-az storage blob list --container-name mogrepsuk --output table
+echo "Files in the Azure container"
+az storage blob list --container-name $azure_container_name --output table
 
 current_date_time="`date +%Y%m%d%H%M%S`";
 echo "start date: $start_date_time";
