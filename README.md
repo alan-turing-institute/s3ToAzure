@@ -28,5 +28,5 @@ $ aws s3 ls s3://<S3 BUCKET NAME>  | tr -s ' ' | cut -d ' ' -f4 > <S3 FILE LIST>
 2. Run the `parallel_download.sh` script
 
 ```bash
-$ bash parallel_download.sh -i <S3 FILE LIST> -w <NUMBER OF PARALLEL CONNECTIONS> -n <AZURE STORAGE NAME> -k <AZURE STORAGE KEY> -c <AZURE CONTAINER NAME>
+$ bash parallel_download.sh -i <S3 FILE LIST> -w <NUMBER OF PARALLEL CONNECTIONS> -n <AZURE STORAGE NAME> -k <AZURE STORAGE KEY> -c <AZURE CONTAINER NAME> -r <AWS REGION NAME>
 ```
