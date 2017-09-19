@@ -1,10 +1,10 @@
 #!/bin/bash
 
-while getopts i:w:n:k:c:r option
+while getopts i:n:r:k:c: option
 do
     case "${option}"
     in
-        i) fileslist=${OPTARG};;
+        i) filelist=${OPTARG};;
         n) azure_storage_name=${OPTARG};;
         k) azure_storage_key=${OPTARG};;
         c) azure_container_name=${OPTARG};;
@@ -13,15 +13,16 @@ do
 done
 
 echo "Getting names of files"
-files=`cat $1`
+files=`cat $filelist`
 i=0
-total_files=`wc -l $1`
+total_files=`wc -l < $filelist`
 
 start_date_time="`date +%Y%m%d%H%M%S`";
 
-for file in $files; do
+for path in $files; do
+    echo az storage blob copy start --source-uri https://${aws_container_name}.s3.amazonaws.com/$path --destination-blob $path --destination-container $azure_container_name --account-key $azure_storage_key --account-name $azure_storage_name
     echo "Uploading the file..."
-    az storage blob copy start --source-uri https://s3.$aws_container_name.amazonaws.com/$azure_container_name/$file --destination-blob $file --destination-container weather --account-key $azure_storage_key --account-name $azure_storage_name  > /dev/null
+    az storage blob copy start --source-uri https://${aws_container_name}.s3.amazonaws.com/$path --destination-blob $path --destination-container $azure_container_name --account-key $azure_storage_key --account-name $azure_storage_name
     i=`expr $i + 1`
     echo "Total Files Uploaded $i / $total_files"
     current_date_time="`date +%Y%m%d%H%M%S`";
@@ -29,7 +30,7 @@ for file in $files; do
 done
 
 echo "Files in the Azure container"
-az storage blob list --container-name $azure_container_name --output table
+az storage blob list --container-name $azure_container_name --account-key $azure_storage_key --account-name $azure_storage_name --output table
 
 current_date_time="`date +%Y%m%d%H%M%S`";
 echo "start date: $start_date_time";
