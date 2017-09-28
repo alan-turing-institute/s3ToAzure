@@ -4,7 +4,7 @@ while getopts i:w:n:k:c:r: option
 do
     case "${option}"
     in
-        i) filelist=${OPTARG};;
+        i) file_list_path=${OPTARG};;
         w) workers=${OPTARG};;
         n) azure_storage_name=${OPTARG};;
         k) azure_storage_key=${OPTARG};;
@@ -13,16 +13,17 @@ do
     esac
 done
 
-lines=`wc -l < $filelist`
+lines=`wc -l < $file_list_path`
 files_per_worker=`expr $lines / $workers`
-directory="tmp"
+directory="tmp/$azure_container_name"
 
-# Create directory if not exist
-mkdir -p $directory
 # Remove everything in temporary directory
 rm $directory/*
 
-split -l $files_per_worker $filelist $directory/files_list
+# Create directory if not exist
+mkdir -p $directory
+
+split -l $files_per_worker $file_list_path $directory/$azure_container_name
 
 files=`ls $directory`
 
